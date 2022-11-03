@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head>
+  <meta charset="utf-8">
+  <title>Tic-Tac-Toe</title>
+  <link rel="stylesheet" href="./style.css">
+  
+
+  <script>
+    var name = prompt("What is your username?")
+  </script>
+</head>
+
+<body>
+  <h1> Tic-Tac-Toe </h1>
+  <div id="gameoptions">
+    <button id="enter" onclick="enterGame()"> Enter New Game!
+    </button>
+    <div id="dropdown">
+      <button id="existinggame"> Join Existing Game </button>
+      <div id="dropdown-container"><a href="/game/1"> Game with alex </a> <a href="/game/2"> Game with alex </a> </div>
+    </div>
+  </div>
+
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script>
+    var socket = io()
+
+    const enterGame = () => {
+      socket.emit('entering game')
+    }
+
+    socket.on('game entered', (num_games) => {
+      socket.emit('add game', `<a href="/game/${num_games}"> Game with ${name} </a> `)
+      window.location.href = "/game/" + num_games
+    })
+
+    socket.on('add game', (element) => {
+      console.log("adding button")
+      $("#dropdown-container").append(element)
+    })
+  </script>
+
+
+</body></html>
