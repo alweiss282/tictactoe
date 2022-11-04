@@ -23,7 +23,7 @@ let num_games = 0
 
 app.get('/game/:game_id', (req, res) => {
   // TODO: Implement game logic
-  res.write("game")
+  res.write("game " + req.params.game_id)
   res.end()
 })
 
@@ -51,6 +51,12 @@ io.on('connection', (socket) => {
     // Add link to newly-created game to dropdown menu and push new HTML to public
     $("#dropdown-container").append(element)
     $("#existinggame").prop("class", "active-button")
+    writeFileSync(path.join(__dirname, './public/index.html'), $.root().html())
+  })
+
+  socket.on('remove option', (id) => {
+    console.log(id)
+    $(`#${id}`).remove()
     writeFileSync(path.join(__dirname, './public/index.html'), $.root().html())
   })
 })

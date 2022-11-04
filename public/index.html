@@ -22,11 +22,11 @@
 <body>
   <h1> Tic-Tac-Toe </h1>
   <div id="gameoptions">
-    <button id="enter" onclick="enterGame()" class="active-button"> Enter New Game!
+    <button id="enter" onclick="enterGame()"> Enter New Game!
     </button>
     <div id="dropdown">
-      <button id="existinggame"> Join Existing Game </button>
-      <div id="dropdown-container"></div>
+      <button id="existinggame" class="active-button"> Join Existing Game </button>
+      <div id="dropdown-container">   </div>
     </div>
   </div>
 
@@ -35,7 +35,7 @@
       socket.emit('entering game')
     }
     socket.on('game entered', (num_games) => {
-      socket.emit('add game', `<a href="/game/${num_games}"> Game with ${name} </a> `)
+      socket.emit('add game', `<a href="/game/${num_games}" id=${num_games} onclick=removeOption(${num_games})> Game with ${name} </a> `)
       window.location.href = "/game/" + num_games
     })
 
@@ -43,6 +43,10 @@
       console.log("adding button")
       $("#dropdown-container").append(element)
     })
+
+    const removeOption = (id) => {
+      socket.emit('remove option', id)
+    }
   </script>
 
 
