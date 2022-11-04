@@ -18,7 +18,7 @@ const template = $
 writeFileSync(path.join(__dirname, './public/index.html'), template.root().html())
 
 // start with no users or games
-let num_users = 0
+let users = new Set()
 let num_games = 0
 
 app.get('/game/:game_id', (req, res) => {
@@ -30,10 +30,15 @@ app.get('/game/:game_id', (req, res) => {
 app.use(express.static(path.join(__dirname, './public')))
 
 io.on('connection', (socket) => {
-
-  num_users += 1
-  socket.on('disconnect', () => {
-    num_users -= 1
+  let username
+  socket.on('new user', (name) => {
+    if (!(users.has(name))) {
+      users.add(name)
+      username = name
+      socket.emit('name processed', false)
+    } else {
+      socket.emit('name processed', true)
+    }
   })
 
   socket.on('entering game', () => {

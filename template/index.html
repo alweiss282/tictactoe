@@ -7,8 +7,18 @@
   <link rel="stylesheet" href="./style.css">
   </style>
 
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script>
-    var name = prompt("What is your username?")
+    const socket = io()
+    let name = prompt("What is your username?")
+    socket.emit('new user', name)
+    socket.on('name processed', (taken) => {
+      if (taken) {
+        let name = prompt("This user name is already taken! What would you like your username to be?")
+        socket.emit('new user', name)
+      }
+    })
   </script>
 </head>
 
@@ -23,16 +33,10 @@
     </div>
   </div>
 
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
   <script>
-    var socket = io()
-
     const enterGame = () => {
       socket.emit('entering game')
     }
-
     socket.on('game entered', (num_games) => {
       socket.emit('add game', `<a href="/game/${num_games}"> Game with ${name} </a> `)
       window.location.href = "/game/" + num_games
